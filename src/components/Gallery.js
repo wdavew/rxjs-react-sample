@@ -1,20 +1,36 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
-require('../styles/styles.css')
+require('../styles/styles.css');
+
+const API_KEY = 'a46a979f39c49975dbdd23b378e6d3d5';
+const API_ENDPOINT = `https://api.flickr.com/services/rest/?method=flickr.interestingness.getList&api_key=${API_KEY}&format=json&nojsoncallback=1&per_page=5`;
+
+
 // STORE
 const Rx = require('rxjs/Rx');
 
-const flickrImages = [
-  "https://farm2.staticflickr.com/1553/25266806624_fdd55cecbc.jpg",
-  "https://farm2.staticflickr.com/1581/25283151224_50f8da511e.jpg",
-  "https://farm2.staticflickr.com/1653/25265109363_f204ea7b54.jpg",
-  "https://farm2.staticflickr.com/1571/25911417225_a74c8041b0.jpg",
-  "https://farm2.staticflickr.com/1450/25888412766_44745cbca3.jpg"
-];
-
-
 const source = new Rx.Subject();
+const selectedImg = new Rx.Subject();
+const makeAJAX = new Rx.Subject();
+
+const fetchImgs = () => {
+  return fetch(API_ENDPOINT).then(function (response) {
+    return response.json().then(function (json) {
+      const imageList = json.photos.photo.map(
+        ({farm, server, id, secret}) => `https://farm${farm}.staticflickr.com/${server}/${id}_${secret}.jpg`
+      )
+      makeAJAX.next(imageList);
+      selectImg(imageList[0]);
+    });
+  });
+}
+
+const selectImg = (img) => {
+  console.log('selecting img', img);
+  selectedImg.next(img);
+}
+
 const setImages = (images) => {
   console.log('setting images');
   source.next(images);
@@ -24,28 +40,32 @@ const setImages = (images) => {
 //   return source.last();
 // } 
 
-const sub = source.subscribe(images => {
-  console.log(images);
-  ReactDOM.render(
+const stateStream = makeAJAX.combineLatest(selectedImg, (imgList, selectedImg) => {
+  console.log('stateStream: ', imgList, selectedImg);
+  return (
     <div className="image-gallery">
       <div className="gallery-image">
         <div>
-          Selected Image goes here
-          </div>
+          <img src={selectedImg} />
+        </div>
       </div>
       <div className="image-scroller">
-        {images.map((image, index) => (
-          <div key={index}>
-              <img src={image} />
-      </div>
+        {imgList.map((image, index) => (
+          <div onClick={() => selectImg(image)} key={index}>
+            <img src={image} />
+          </div>
         ))}
       </div>
-      </div >,
-    document.getElementById('root')
-    )
-})
+    </div >
+  )
+});
 
-setImages(flickrImages)
+console.log('state stream is', stateStream);
 
-const interval = setInterval(() => setImages(flickrImages.slice(0, Math.floor(Math.random() * 5))), 5)
+const interval = setInterval(() => {
+  fetchImgs()
+}, 1000)
+
+stateStream.subscribe(app => ReactDOM.render(app, document.getElementById('root')));
+
 setTimeout(() => clearInterval(interval), 3000);
