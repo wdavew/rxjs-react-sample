@@ -1,8 +1,6 @@
 import {fetchImages} from './flicker.js'
 import {put, take, fork} from 'redux-saga/effects';
 
-
-
 export function* loadImages() {
   try {
   const images = yield fetchImages();
