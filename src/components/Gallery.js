@@ -13,6 +13,7 @@ const Rx = require('rxjs/Rx');
 const source = new Rx.Subject();
 const selectedImg = new Rx.Subject();
 const makeAJAX = new Rx.Subject();
+const superstream = source.merge(selectedImg, makeAJAX);
 
 const fetchImgs = () => {
   return fetch(API_ENDPOINT).then(function (response) {
@@ -40,7 +41,15 @@ const setImages = (images) => {
 //   return source.last();
 // } 
 
-const stateStream = makeAJAX.combineLatest(selectedImg, (imgList, selectedImg) => {
+const filteredMakeAJAX = superstream.filter((el) => {
+  return Array.isArray(el);
+});
+
+const filteredSelectedImg = superstream.filter((el) => {
+  return typeof el === 'string';
+});
+
+const renderStream = Rx.Observable.combineLatest(filteredMakeAJAX, filteredSelectedImg, (imgList, selectedImg) => {
   console.log('stateStream: ', imgList, selectedImg);
   return (
     <div className="image-gallery">
@@ -60,12 +69,11 @@ const stateStream = makeAJAX.combineLatest(selectedImg, (imgList, selectedImg) =
   )
 });
 
-console.log('state stream is', stateStream);
-
 const interval = setInterval(() => {
   fetchImgs()
 }, 1000)
 
-stateStream.subscribe(app => ReactDOM.render(app, document.getElementById('root')));
+superstream.subscribe((ele) => console.log('superstream', ele));
+renderStream.subscribe(app => ReactDOM.render(app, document.getElementById('root')));
 
 setTimeout(() => clearInterval(interval), 3000);
