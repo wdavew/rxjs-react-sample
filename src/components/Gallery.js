@@ -10,10 +10,7 @@ const API_ENDPOINT = `https://api.flickr.com/services/rest/?method=flickr.intere
 // STORE
 const Rx = require('rxjs/Rx');
 
-const source = new Rx.Subject();
-const selectedImg = new Rx.Subject();
-const makeAJAX = new Rx.Subject();
-const superstream = source.merge(selectedImg, makeAJAX);
+const superstream = new Rx.Subject();
 
 const fetchImgs = () => {
   return fetch(API_ENDPOINT).then(function (response) {
@@ -21,21 +18,17 @@ const fetchImgs = () => {
       const imageList = json.photos.photo.map(
         ({farm, server, id, secret}) => `https://farm${farm}.staticflickr.com/${server}/${id}_${secret}.jpg`
       )
-      makeAJAX.next(imageList);
-      selectImg(imageList[0]);
+      dispatch(imageList);
+      dispatch(imageList[0]);
     });
   });
 }
 
-const selectImg = (img) => {
-  console.log('selecting img', img);
-  selectedImg.next(img);
+const dispatch = (data) => {
+  console.log('sending data', data);
+  superstream.next(data);
 }
 
-const setImages = (images) => {
-  console.log('setting images');
-  source.next(images);
-}
 
 // function Gallery() {
 //   return source.last();
@@ -60,7 +53,7 @@ const renderStream = Rx.Observable.combineLatest(filteredMakeAJAX, filteredSelec
       </div>
       <div className="image-scroller">
         {imgList.map((image, index) => (
-          <div onClick={() => selectImg(image)} key={index}>
+          <div onClick={() => dispatch(image)} key={index}>
             <img src={image} />
           </div>
         ))}
@@ -69,11 +62,7 @@ const renderStream = Rx.Observable.combineLatest(filteredMakeAJAX, filteredSelec
   )
 });
 
-const interval = setInterval(() => {
-  fetchImgs()
-}, 1000)
-
 superstream.subscribe((ele) => console.log('superstream', ele));
 renderStream.subscribe(app => ReactDOM.render(app, document.getElementById('root')));
+fetchImgs()
 
-setTimeout(() => clearInterval(interval), 3000);
