@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
+import Perf from 'react-addons-perf' 
+window.Perf = Perf;
 require('../styles/styles.css');
 
 const API_KEY = 'a46a979f39c49975dbdd23b378e6d3d5';
