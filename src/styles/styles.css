@@ -3,6 +3,12 @@ body {
     background: white;
 }
 
+.pointless-container {
+    background-color: #f0f0f0;
+    margin: 10px;
+    width: 200px;
+}
+
 .title {
     display: flex;
     padding: 2px;

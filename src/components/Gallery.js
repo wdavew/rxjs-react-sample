@@ -2,7 +2,9 @@ import React, { Component } from 'react'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import  * as GalleryActions from '../actions/actions.js';
-
+import Perf from 'react-addons-perf' 
+window.Perf = Perf;
+require('../styles/styles.css');
 
 const flickrImages = [
   "https://farm2.staticflickr.com/1581/25283151224_50f8da511e.jpg",
@@ -16,9 +18,9 @@ export class Gallery extends Component {
     this.props.loadImages();
   }
   render() {
-    const {images, selectedImage, selectImage} = this.props;
+    const {images, selectedImage, selectImage, mouseMove} = this.props;
     return (
-      <div className="image-gallery">
+      <div className="image-gallery"  onMouseMove={(e) => mouseMove(e.pageX, e.pageY)}>
         <div className="gallery-image">
           <div>
             <img src={selectedImage} />
@@ -36,7 +38,6 @@ export class Gallery extends Component {
   }
   }
   
-
 function mapStateToProps(state) {
   return {
     images: state.images,

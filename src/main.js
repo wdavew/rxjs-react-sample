@@ -2,7 +2,7 @@ import "babel-polyfill"
 
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Gallery from './components/Gallery'
+import App from './components/App'
 import {createStore, applyMiddleware} from 'redux';
 import createSagaMiddleware from 'redux-saga';
 import reducer from './reducer';
@@ -16,7 +16,7 @@ sagaMiddleware.run(watchForLoadImages);
 
 ReactDOM.render(
   <Provider store={store}>
-  <Gallery />
+  <App />
   </Provider>,
   document.getElementById('root')
 );
