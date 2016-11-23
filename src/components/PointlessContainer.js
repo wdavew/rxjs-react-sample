@@ -6,21 +6,16 @@ import Perf from 'react-addons-perf'
 window.Perf = Perf;
 require('../styles/styles.css');
 
-export class PointlessContainer extends Component {
+
+export default class PointlessContainer extends Component {
   render() {
-    const {x, y} = this.props;
+    const {x} = this.props;
     return (
       <div className="pointless-container">
         I am subscribed to the redux store.
-        In case you didn't know, your mouse is at ({x}, {y}));
+        Congratulations, you have had this wondefful app opened for {x} milliseconds!!!
       </div>
     )
   }
 }
 
-function mapStateToProps(state) {
-  const {x, y} = state;
-  return {x, y};
-}
-
-export default connect(mapStateToProps)(PointlessContainer)

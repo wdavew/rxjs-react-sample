@@ -1,10 +1,13 @@
 import React, { Component } from 'react'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import PointlessContainer from './PointlessContainer'
+import AnotherPointlessContainer from './AnotherPointlessContainer.js'
 import  * as GalleryActions from '../actions/actions.js';
 import Perf from 'react-addons-perf' 
 window.Perf = Perf;
 require('../styles/styles.css');
+
 
 const flickrImages = [
   "https://farm2.staticflickr.com/1581/25283151224_50f8da511e.jpg",
@@ -16,11 +19,28 @@ const flickrImages = [
 export class Gallery extends Component {
   componentDidMount() {
     this.props.loadImages();
+    this.time = 0;
+    this.emptyComponents = [];
+    for (let i = 0; i < 300; i ++) {
+      this.emptyComponents.push(i);
+    }
   }
+
+  seizure() {
+    const interval = setInterval(() => this.props.selectImage(this.props.images[Math.floor(Math.random() * 5)]), 50);
+    setTimeout(() => clearInterval(interval), 10000)
+  }
+  
+  timer() {
+    const interval = setInterval(() => this.props.timeIncr(this.time += 50), 50);
+  }
+
   render() {
-    const {images, selectedImage, selectImage, mouseMove} = this.props;
+    const {images, selectedImage, x, selectImage} = this.props;
+    this.timer();
     return (
-      <div className="image-gallery"  onMouseMove={(e) => mouseMove(e.pageX, e.pageY)}>
+      <div className="image-gallery"  onClick={() => this.seizure()}>
+      <PointlessContainer x={x} />
         <div className="gallery-image">
           <div>
             <img src={selectedImage} />
@@ -33,6 +53,12 @@ export class Gallery extends Component {
             </div>
           ))}
         </div>
+        {this.emptyComponents ? 
+          this.emptyComponents.map((comp, index) => {
+          return <AnotherPointlessContainer image={selectedImage} key={index}/>
+          })
+        : undefined
+        }
       </div>
     )
   }
@@ -41,7 +67,9 @@ export class Gallery extends Component {
 function mapStateToProps(state) {
   return {
     images: state.images,
-    selectedImage: state.selectedImage
+    selectedImage: state.selectedImage,
+    x: state.x,
+    y: state.y,
   }
 }
 

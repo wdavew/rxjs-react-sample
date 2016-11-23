@@ -1,6 +1,6 @@
 export const IMAGE_SELECTED = 'IMAGE_SELECTED';
 const LOAD_IMAGES = 'LOAD_IMAGES';
-export const MOUSE_MOVE = 'MOUSE_MOVE';
+export const INCR_TIME = 'INCR_TIME';
 
 export function selectImage(image) {
   return {
@@ -15,10 +15,9 @@ export function loadImages() {
   }
 }
 
-export function mouseMove(x, y) {
+export function timeIncr(x, y) {
   return {
-    type: MOUSE_MOVE,
-    x,
-    y
+    type: INCR_TIME,
+    x
   }
 }
