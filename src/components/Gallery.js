@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
-import Perf from 'react-addons-perf' 
+import Perf from 'react-addons-perf'
+import reactiveComponent from '../reactive-component.js' 
 window.Perf = Perf;
 require('../styles/styles.css');
 
@@ -12,7 +13,7 @@ const API_ENDPOINT = `https://api.flickr.com/services/rest/?method=flickr.intere
 
 // STORE
 const Rx = require('rxjs/Rx');
-const superstream = new Rx.Subject();
+const superstream = new Rx.BehaviorSubject();
 
 const fetchImgs = () => {
   return fetch(API_ENDPOINT).then(function (response) {
@@ -27,24 +28,29 @@ const fetchImgs = () => {
 }
 
 const dispatch = (data) => {
-  console.log('DISPATCHING:', data);
   superstream.next(data);
 }
 
 const filterStream = (actionType) => {
-  return superstream.filter(el => el.type === actionType)
+  return superstream.filter(el => {
+    return el ? (el.type === actionType) : el
+  })
 }
 
-const [ajaxStream, selectStream] = ['IMAGE_LIST', 'SELECT_IMAGE'].map(type => filterStream(type));
+const stateStreams = ['IMAGE_LIST', 'SELECT_IMAGE'].map(type => filterStream(type));
 
-const renderStream = Rx.Observable.combineLatest(ajaxStream, selectStream, (imgListAction, selectedImgAction) => {
-  const {imgList} = imgListAction;
-  const {selectedImg} = selectedImgAction;
-  console.log('selectedImg', selectedImgAction);
+const SelectedImg = reactiveComponent(({selectedImg}) => {
+  console.log('selectedImg');
+  return (<div className='selected-text'>{selectedImg}</div>)
+}, filterStream('SELECT_IMAGE'));
+
+
+const elementDefinition = ({imgList}, {selectedImg}) => {
   return (
     <div className="image-gallery">
       <div className="gallery-image">
         <div>
+        <SelectedImg />
           <img src={selectedImg} />
         </div>
       </div>
@@ -57,9 +63,12 @@ const renderStream = Rx.Observable.combineLatest(ajaxStream, selectStream, (imgL
       </div>
     </div >
   )
-});
+};
+
+const Element = reactiveComponent(elementDefinition, stateStreams);
+
 
 superstream.subscribe((ele) => console.log('superstream', ele));
-renderStream.subscribe(app => ReactDOM.render(app, document.getElementById('root')));
+ReactDOM.render(< Element/>, document.getElementById('root'));
 fetchImgs()
 
