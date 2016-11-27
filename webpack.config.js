@@ -1,5 +1,5 @@
 module.exports = {
-  entry: './src/components/Gallery.js',
+  entry: './src/main.js',
   output: { path: __dirname + '/build', filename: 'bundle.js' },
   module: {
     loaders: [

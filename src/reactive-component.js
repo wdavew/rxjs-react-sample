@@ -1,22 +1,27 @@
 const Rx = require('rxjs/Rx');
 import React, { Component } from 'react';
 
-const mapStreamsToComponent = (componentDefinition, streams) => {
-  return Rx.Observable.combineLatest(...streams, componentDefinition)
+const mapStreamsToProps = (filteredStreams, streamNames) => {
+  return Rx.Observable.combineLatest(...filteredStreams, (...filteredStreams) => {
+    return streamNames.reduce((accum, curr, idx) => {
+      accum[curr] = filteredStreams[idx]
+      return accum;
+    }, {});
+  })
 }
 
 export default function (componentDefinition, ...streams) {
   return class extends Component {
-    state = { domElement: null }
-
+    state = { childProps: {} }
     static contextTypes = { upstream: React.PropTypes.object.isRequired }
 
     componentWillMount() {
+      this.dispatch = this.context.upstream.dispatch.bind(this.context.upstream);
       const upstream = this.context.upstream;
-      const filteredStreams = streams.map(actionType => upstream.filterForAction(actionType));
-      const component$ = mapStreamsToComponent(componentDefinition, filteredStreams)
-      this.subscription = component$.subscribe((domElement) => {
-        this.setState({ domElement });
+      const filteredStreams = streams.map(actionType => upstream.filterForAction(actionType).startWith(null));
+      const component$ = mapStreamsToProps(filteredStreams, streams)
+      this.subscription = component$.subscribe((props) => {
+        this.setState({ childProps: props});
       });
     }
 
@@ -25,8 +30,9 @@ export default function (componentDefinition, ...streams) {
     }
 
     render() {
-      return this.state.domElement;
+      return React.createElement(componentDefinition, 
+      Object.assign(this.state.childProps, {dispatch: this.dispatch}),
+      null);
     }
-
   }
 }
