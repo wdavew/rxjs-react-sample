@@ -1,24 +1,25 @@
 const Rx = require('rxjs/Rx');
-const superstream = new Rx.BehaviorSubject();
 
-const fetchImgs = () => {
-  return fetch(API_ENDPOINT).then(function (response) {
-    return response.json().then(function (json) {
-      const imgList = json.photos.photo.map(
-        ({farm, server, id, secret}) => `https://farm${farm}.staticflickr.com/${server}/${id}_${secret}.jpg`
-      )
-      dispatch({imgList, type: 'IMAGE_LIST'});
-      dispatch({selectedImg: imgList[0], type: 'SELECT_IMAGE'});
-    });
-  });
+class Upstream {
+  constructor() {
+    this.stream = new Rx.BehaviorSubject();
+  }
+
+  dispatch(data) {
+    if (!(data.hasOwnProperty('data') && data.hasOwnProperty('type'))) {
+      throw new Error('Actions dispatched upstream must be objects with data and type properties')
+    }
+    this.stream.next(data);
+  }
+
+  filterForAction(actionType) {
+    return this.stream.filter(el => {
+      return el ? (el.type === actionType) : el
+    })
+      .map(el => el ? el.data : el)
+  }
 }
 
-const dispatch = (data) => {
-  superstream.next(data);
-}
-
-const filterStream = (actionType) => {
-  return superstream.filter(value => {
-    return value ? (value.type === actionType) : value
-  })
+export default function createUpstream() {
+  return new Upstream();
 }
