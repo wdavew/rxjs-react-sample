@@ -5,7 +5,6 @@ import PointlessContainer from './PointlessContainer'
 import AnotherPointlessContainer from './AnotherPointlessContainer.js'
 import  * as GalleryActions from '../actions/actions.js';
 import Perf from 'react-addons-perf' 
-window.Perf = Perf;
 require('../styles/styles.css');
 
 
@@ -21,25 +20,39 @@ export class Gallery extends Component {
     this.props.loadImages();
     this.time = 0;
     this.emptyComponents = [];
-    for (let i = 0; i < 300; i ++) {
+    for (let i = 0; i < 200; i ++) {
       this.emptyComponents.push(i);
     }
   }
 
+  performanceTest() {
+    setTimeout(() => {
+      clearInterval(seizureInterval);
+      clearInterval(timerInterval);
+      Perf.stop();
+      Perf.printInclusive();
+      Perf.printExclusive();
+      Perf.printWasted();
+    }, 10000)
+    Perf.start();
+    const seizureInterval = this.seizure();
+    const timerInterval = this.timer();
+  }
+
   seizure() {
-    const interval = setInterval(() => this.props.selectImage(this.props.images[Math.floor(Math.random() * 5)]), 50);
-    setTimeout(() => clearInterval(interval), 10000)
+    return setInterval(() => this.props.selectImage(this.props.images[Math.floor(Math.random() * 5)]), 50);
+
   }
   
   timer() {
-    const interval = setInterval(() => this.props.timeIncr(this.time += 50), 50);
+    return setInterval(() => this.props.timeIncr(this.time += 1000), 50);
   }
 
   render() {
     const {images, selectedImage, x, selectImage} = this.props;
-    this.timer();
     return (
-      <div className="image-gallery"  onClick={() => this.seizure()}>
+      <div className="image-gallery">
+      <button onClick={() => this.performanceTest()}>Click me</button>
       <PointlessContainer x={x} />
         <div className="gallery-image">
           <div>
