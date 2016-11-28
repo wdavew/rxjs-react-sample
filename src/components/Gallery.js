@@ -45,27 +45,38 @@ class Gallery extends Component {
     this.fetchImages();
     this.time = 0;
     this.emptyComponents = [];
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 200; i++) {
       this.emptyComponents.push(i);
     }
   }
 
+  performanceTest() {
+    setTimeout(() => {
+      clearInterval(seizureInterval);
+      clearInterval(timerInterval);
+      Perf.stop();
+      Perf.printInclusive();
+      Perf.printExclusive();
+      Perf.printWasted();
+    }, 10000)
+    Perf.start();
+    const seizureInterval = this.seizure();
+    const timerInterval = this.timer();
+  }
+
   seizure() {
-    const interval = setInterval(() => this.selectImage(this.props.IMAGE_LIST[Math.floor(Math.random() * 5)]), 5000);
-    setTimeout(() => clearInterval(interval), 10000)
+    return setInterval(() => this.selectImage(this.props.IMAGE_LIST[Math.floor(Math.random() * 5)]), 50);
   }
 
   timer() {
-    clearInterval(this.interval);
-    this.interval = setInterval(() => this.timeIncr(this.time += 1000), 1000);
+    return setInterval(() => this.timeIncr(this.time += 1000), 50);
   }
 
   render() {
-    console.log(this.props);
     const {IMAGE_LIST: images, SELECT_IMAGE: selectedImage, TIME_INCR: x} = this.props;
-    this.timer();
     return (
-      <div className="image-gallery" onClick={() => this.seizure()}>
+      <div className="image-gallery">
+      <button onClick={() => this.performanceTest()}>Click Me</button>
         <PointlessContainer x={x} />
         <div className="gallery-image">
           <div>
