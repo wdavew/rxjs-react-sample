@@ -45,7 +45,7 @@ class Gallery extends Component {
     this.fetchImages();
     this.time = 0;
     this.emptyComponents = [];
-    for (let i = 0; i < 200; i++) {
+    for (let i = 0; i < 300; i++) {
       this.emptyComponents.push(i);
     }
   }
@@ -73,11 +73,11 @@ class Gallery extends Component {
   }
 
   render() {
-    const {IMAGE_LIST: images, SELECT_IMAGE: selectedImage, TIME_INCR: x} = this.props;
+    const {IMAGE_LIST: images, SELECT_IMAGE: selectedImage} = this.props;
     return (
       <div className="image-gallery">
       <button onClick={() => this.performanceTest()}>Click Me</button>
-        <PointlessContainer x={x} />
+        <PointlessContainer />
         <div className="gallery-image">
           <div>
             <img src={selectedImage} />
@@ -101,4 +101,4 @@ class Gallery extends Component {
   }
 }
 
-export default reactiveComponent(Gallery, 'IMAGE_LIST', 'SELECT_IMAGE', 'TIME_INCR');
+export default reactiveComponent(Gallery, 'IMAGE_LIST', 'SELECT_IMAGE');

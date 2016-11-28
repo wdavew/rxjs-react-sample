@@ -1,20 +1,17 @@
-import React, { Component } from 'react'
-import {connect} from 'react-redux';
-import {bindActionCreators} from 'redux';
-import Perf from 'react-addons-perf' 
-window.Perf = Perf;
+import React from 'react'
+import reactiveComponent from '../reactive-component';
 require('../styles/styles.css');
 
 
-export default class PointlessContainer extends Component {
-  render() {
-    const {x} = this.props;
-    return (
-      <div className="pointless-container">
-        I am subscribed to the redux store.
-        Congratulations, you have had this wondefful app opened for {x} milliseconds!!!
+function PointlessContainer(props) {
+  const {TIME_INCR: x} = props;
+  return (
+    <div className="pointless-container">
+      I am subscribed to the redux store.
+        Congratulations, you have had this wondefful app opened for {x}milliseconds!!!
       </div>
-    )
-  }
+  )
 }
+
+export default reactiveComponent(PointlessContainer, 'TIME_INCR');
 
