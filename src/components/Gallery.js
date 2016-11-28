@@ -20,7 +20,7 @@ export class Gallery extends Component {
     this.props.loadImages();
     this.time = 0;
     this.emptyComponents = [];
-    for (let i = 0; i < 200; i ++) {
+    for (let i = 0; i < 300; i ++) {
       this.emptyComponents.push(i);
     }
   }
