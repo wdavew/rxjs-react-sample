@@ -20,14 +20,14 @@ export class Gallery extends Component {
     this.props.loadImages();
     this.time = 0;
     this.emptyComponents = [];
-    for (let i = 0; i < 300; i ++) {
+    for (let i = 0; i < 5000; i ++) {
       this.emptyComponents.push(i);
     }
   }
 
   performanceTest() {
     setTimeout(() => {
-      clearInterval(seizureInterval);
+      // clearInterval(seizureInterval);
       clearInterval(timerInterval);
       Perf.stop();
       Perf.printInclusive();
@@ -35,7 +35,7 @@ export class Gallery extends Component {
       Perf.printWasted();
     }, 10000)
     Perf.start();
-    const seizureInterval = this.seizure();
+    // const seizureInterval = this.seizure();
     const timerInterval = this.timer();
   }
 
@@ -45,7 +45,7 @@ export class Gallery extends Component {
   }
   
   timer() {
-    return setInterval(() => this.props.timeIncr(this.time += 1000), 50);
+    return setInterval(() => this.props.timeIncr(this.time += 50), 50);
   }
 
   render() {
