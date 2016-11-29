@@ -3,8 +3,11 @@ const Rx = require('rxjs/Rx');
 class Upstream {
   constructor() {
     this.stream = new Rx.BehaviorSubject();
-    this.history = 'hello';
+    this.history = [];
     this.getHistory();
+    this.eventTypes = {};
+    this.recordActionTypes();
+    window.timeTravelToPointN = this.timeTravelToPointN.bind(this);
   }
 
   dispatch(data) {
@@ -12,6 +15,11 @@ class Upstream {
       throw new Error('Actions dispatched upstream must be objects with data and type properties')
     }
     this.stream.next(data);
+  }
+
+   recordActionTypes() {
+    this.actionStream = this.stream.filter(action => action).map(action => action.type)
+    this.actionStream.subscribe(type => this.eventTypes[type] = true);
   }
 
   filterForAction(actionType) {
@@ -22,17 +30,35 @@ class Upstream {
   }
 
   getHistory() {
-    this.historyStream = this.stream
+    this.historyStream = this.stream.filter(action => action && !action.ignore)
       .scan((acc, cur) => {
         acc.push(cur);
         return acc;
       }, [])
-    this.historyStream.subscribe((el) => this.history = el)
+      .publish()
+    this.historyStream.connect();
+    this.historyStream.subscribe(el => {
+      console.log("actual history stream:", el)
+      this.history = el
+    })
   }
 
   logHistory() {
-    return this.history;
+    Object.keys(this.eventTypes).forEach(event => {
+      let action = { data: null, type: event, ignore: true }
+      this.dispatch(action);
+    });
+    console.log(this.history);
+
   }
+
+  timeTravelToPointN(n){
+    this.logHistory();
+    for (let i = 0; i <= n; i++) {
+      this.dispatch(Object.assign({ignore: true}, this.history[i]));
+    }
+  }
+
 }
 
 

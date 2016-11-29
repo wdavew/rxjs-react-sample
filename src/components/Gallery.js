@@ -1,6 +1,4 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
 import reactiveComponent from '../reactive-component';
 import PointlessContainer from './PointlessContainer'
 import AnotherPointlessContainer from './AnotherPointlessContainer.js'
@@ -9,6 +7,7 @@ import Perf from 'react-addons-perf'
 window.Perf = Perf;
 require('../styles/styles.css');
 
+// TODO --- figure out how to totally reset app inlcuding dimensions
 const API_KEY = 'a46a979f39c49975dbdd23b378e6d3d5';
 const API_ENDPOINT = `https://api.flickr.com/services/rest/?method=flickr.interestingness.getList&api_key=${API_KEY}&format=json&nojsoncallback=1&per_page=5`;
 
@@ -40,20 +39,21 @@ const timeIncr = (dispatch, time) => {
 class Gallery extends Component {
   constructor(props) {
     super();
+    window.dispatch = props.dispatch;
     this.fetchImages = fetchImages.bind(this, props.dispatch);
     this.selectImage = selectImage.bind(this, props.dispatch);
     this.timeIncr = timeIncr.bind(this, props.dispatch);
     this.getHistory = getHistory.bind(this);
-
   }
 
   componentDidMount() {
     this.fetchImages();
     this.time = 0;
     this.emptyComponents = [];
-    for (let i = 0; i < 5000; i++) {
+    for (let i = 0; i < 5; i++) {
       this.emptyComponents.push(i);
     }
+    window.forceUpdate = this.forceUpdate.bind(this);
   }
 
   performanceTest() {

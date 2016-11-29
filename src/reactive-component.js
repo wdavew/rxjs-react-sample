@@ -12,17 +12,21 @@ const mapStreamsToProps = (filteredStreams, streamNames) => {
 
 export default function (componentDefinition, ...streams) {
   return class extends Component {
-    state = { childProps: {} }
-    static contextTypes = { upstream: React.PropTypes.object.isRequired }
 
-    componentWillMount() {
-      this.dispatch = this.context.upstream.dispatch.bind(this.context.upstream);
-      this.logHistory = this.context.upstream.logHistory.bind(this.context.upstream);
-      const upstream = this.context.upstream;
-      const filteredStreams = streams.map(actionType => upstream.filterForAction(actionType).startWith(null));
+    constructor(props, context) {
+      super();
+      this.state = { childProps: {} }
+      this.dispatch = context.upstream.dispatch.bind(context.upstream);
+      this.logHistory = context.upstream.logHistory.bind(context.upstream);
+      this.upstream = context.upstream;
+    }
+
+    static contextTypes = { upstream: React.PropTypes.object.isRequired }
+    componentDidMount(context) {
+      const filteredStreams = streams.map(actionType => this.upstream.filterForAction(actionType).startWith(null));
       const component$ = mapStreamsToProps(filteredStreams, streams)
       this.subscription = component$.subscribe((props) => {
-        this.setState({ childProps: props});
+        this.setState({ childProps: props });
       });
     }
 
@@ -32,8 +36,8 @@ export default function (componentDefinition, ...streams) {
 
     render() {
       return React.createElement(componentDefinition,
-      Object.assign(this.state.childProps, {dispatch: this.dispatch, logHistory: this.logHistory}),
-      null);
+        Object.assign(this.state.childProps, { dispatch: this.dispatch, logHistory: this.logHistory }),
+        null);
     }
   }
 }
