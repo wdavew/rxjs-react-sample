@@ -3,6 +3,8 @@ const Rx = require('rxjs/Rx');
 class Upstream {
   constructor() {
     this.stream = new Rx.BehaviorSubject();
+    this.history = 'hello';
+    this.getHistory();
   }
 
   dispatch(data) {
@@ -18,7 +20,22 @@ class Upstream {
     })
       .map(el => el ? el.data : el)
   }
+
+  getHistory() {
+    this.historyStream = this.stream
+      .scan((acc, cur) => {
+        acc.push(cur);
+        return acc;
+      }, [])
+    this.historyStream.subscribe((el) => this.history = el)
+  }
+
+  logHistory() {
+    return this.history;
+  }
 }
+
+
 
 export default function createUpstream() {
   return new Upstream();

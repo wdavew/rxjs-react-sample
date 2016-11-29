@@ -25,6 +25,10 @@ const fetchImages = (dispatch) => {
   })
 }
 
+const getHistory = (props) => {
+  console.log(props.logHistory());
+}
+
 const selectImage = (dispatch, imageUrl) => {
   dispatch({ data: imageUrl, type: 'SELECT_IMAGE' });
 }
@@ -39,6 +43,8 @@ class Gallery extends Component {
     this.fetchImages = fetchImages.bind(this, props.dispatch);
     this.selectImage = selectImage.bind(this, props.dispatch);
     this.timeIncr = timeIncr.bind(this, props.dispatch);
+    this.getHistory = getHistory.bind(this);
+
   }
 
   componentDidMount() {
@@ -71,10 +77,12 @@ class Gallery extends Component {
   }
 
   render() {
+    console.log(this.history)
     const {IMAGE_LIST: images, SELECT_IMAGE: selectedImage} = this.props;
     return (
       <div className="image-gallery">
       <button onClick={() => this.performanceTest()}>Click Me</button>
+        <button onClick={() => this.getHistory(this.props)}>Console Log</button>
         <PointlessContainer />
         <div className="gallery-image">
           <div>
