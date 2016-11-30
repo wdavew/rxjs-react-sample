@@ -16,6 +16,15 @@ class Upstream {
     }
     this.stream.next(data);
   }
+  
+  dispatchSideEffect(streamFunction) {
+    console.log('dispatchSideEffect called with', streamFunction)
+    const sideEffectStream = streamFunction(this.stream.filter(action => action));
+    sideEffectStream.subscribe((action) => {
+        console.log('SIDE EFFECT:', action)
+      this.dispatch(action);
+    })
+  }
 
   dispatchSideEffect(streamFunction) {
     const sideEffectStream = streamFunction(this.stream.filter(action => action).skip(1));
