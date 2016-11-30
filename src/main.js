@@ -3,7 +3,7 @@ import "babel-polyfill"
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Gallery from './components/Gallery'
-import soop from 'soop';
+import soop from 'soup-js';
 require("./styles/styles.css")
 
 const store = soop.createUpstream();

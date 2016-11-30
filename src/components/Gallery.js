@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {reactiveComponent} from 'soop';
+import {reactiveComponent} from 'soup-js';
 import PointlessContainer from './PointlessContainer'
 import AnotherPointlessContainer from './AnotherPointlessContainer.js'
 import Perf from 'react-addons-perf'
