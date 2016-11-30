@@ -31,7 +31,7 @@ const fetchGalaxy = (upstream) => {
     mode: 'cors'
   }
   return Rx.Observable.fromPromise(
-    (fetch('https://upload.wikimedia.org/wikipedia/commons/2/2b/Tolworth_tower_gigapixel_panorama.jpg', init)
+    (fetch('https://upload.wikimedia.org/wikipedia/commons/3/3d/Grzybowa.jpg', init)
     ).then(response => response.blob())
       .then(blob => URL.createObjectURL(blob))
     )
@@ -118,7 +118,7 @@ class Gallery extends Component {
             : undefined
           }
         </div>
-        <img src={galaxy} />
+        <img src={galaxy}/>
       </div>
     )
   }
