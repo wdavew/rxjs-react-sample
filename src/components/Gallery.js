@@ -53,9 +53,10 @@ const timeIncr = (dispatch, time) => {
 class Gallery extends Component {
   constructor(props) {
     super();
+    console.log('props are', props);
     this.fetchImages = fetchImages.bind(this);
-    this.fetchGalaxy = () => this.props.dispatchSideEffect(fetchGalaxy);
-    this.cancelRequest = () => this.props.dispatch({data: null, type: 'REQUEST_ABORT'});
+    this.fetchGalaxy = () => props.dispatchSideEffect(fetchGalaxy);
+    this.cancelRequest = () => props.dispatch({data: null, type: 'REQUEST_ABORT'});
     this.selectImage = selectImage.bind(this, props.dispatch);
     this.timeIncr = timeIncr.bind(this, props.dispatch);
   }
