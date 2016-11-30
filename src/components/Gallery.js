@@ -79,7 +79,7 @@ class Gallery extends Component {
       Perf.printInclusive();
       Perf.printExclusive();
       Perf.printWasted();
-    }, 10000)
+    }, 3000)
     Perf.start();
     const timerInterval = this.timer();
   }
