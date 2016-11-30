@@ -17,6 +17,19 @@ class Upstream {
     this.stream.next(data);
   }
 
+  dispatchSideEffect(streamFunction) {
+    const sideEffectStream = streamFunction(this.stream.filter(action => action).skip(1));
+    sideEffectStream.subscribe((action) => {
+        console.log('SIDE EFFECT:', action)
+      this.dispatch(action);
+    })
+  }
+
+   recordActionTypes() {
+    this.actionStream = this.stream.filter(action => action).map(action => action.type)
+    this.actionStream.subscribe(type => this.eventTypes[type] = true);
+  }
+
    recordActionTypes() {
     this.actionStream = this.stream.filter(action => action).map(action => action.type)
     this.actionStream.subscribe(type => this.eventTypes[type] = true);
@@ -60,7 +73,6 @@ class Upstream {
   }
 
 }
-
 
 
 export default function createUpstream() {

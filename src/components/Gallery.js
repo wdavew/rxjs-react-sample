@@ -11,10 +11,18 @@ require('../styles/styles.css');
 const API_KEY = 'a46a979f39c49975dbdd23b378e6d3d5';
 const API_ENDPOINT = `https://api.flickr.com/services/rest/?method=flickr.interestingness.getList&api_key=${API_KEY}&format=json&nojsoncallback=1&per_page=5`;
 
+<<<<<<< Updated upstream
 const fetchImages = (dispatch) => {
   return fetch(API_ENDPOINT).then(function (response) {
     return response.json().then(function (json) {
       return json.photos.photo.map(
+=======
+const fetchImages = (upstream) => {
+  // upstream.filter(action => action.type === 'REQUEST_ABORT').last(data => console.log("upstream filtered", data));
+  return Rx.Observable.fromPromise(
+    fetch(API_ENDPOINT).then((response) => response.json())
+      .then((json) => json.photos.photo.map(
+>>>>>>> Stashed changes
         ({farm, server, id, secret}) => `https://farm${farm}.staticflickr.com/${server}/${id}_${secret}.jpg`
       )
       }).then(imgList => {
@@ -24,8 +32,26 @@ const fetchImages = (dispatch) => {
   })
 }
 
+<<<<<<< Updated upstream
 const getHistory = (props) => {
   console.log(props.logHistory());
+=======
+const fetchGalaxy = (upstream) => {
+  const init = {
+    method: 'GET',
+    mode: 'cors',
+  }
+  return Rx.Observable.fromPromise(
+    (fetch('https://upload.wikimedia.org/wikipedia/commons/8/83/Gier_pigeon%28mealie%29.jpg', init)
+    ).then(response => response.blob())
+      .then(blob => URL.createObjectURL(blob))
+  )
+    .flatMap((responseString) => {
+      return Rx.Observable.of({ data: responseString, type: 'GALAXY_HAS_ARRIVED' }).delay(3000)
+    })
+    .startWith({ data: null, type: 'REQUEST_GALAXY' }) // maybe add this part to superstream instead
+    .takeUntil(upstream.filter(action => action.type === 'REQUEST_ABORT'))
+>>>>>>> Stashed changes
 }
 
 const selectImage = (dispatch, imageUrl) => {
@@ -39,8 +65,14 @@ const timeIncr = (dispatch, time) => {
 class Gallery extends Component {
   constructor(props) {
     super();
+<<<<<<< Updated upstream
     window.dispatch = props.dispatch;
     this.fetchImages = fetchImages.bind(this, props.dispatch);
+=======
+    this.fetchImages = fetchImages.bind(this);
+    this.fetchGalaxy = () => this.props.dispatchSideEffect(fetchGalaxy);
+    this.cancelRequest = () => this.props.dispatch({ data: null, type: 'REQUEST_ABORT' });
+>>>>>>> Stashed changes
     this.selectImage = selectImage.bind(this, props.dispatch);
     this.timeIncr = timeIncr.bind(this, props.dispatch);
     this.getHistory = getHistory.bind(this);
