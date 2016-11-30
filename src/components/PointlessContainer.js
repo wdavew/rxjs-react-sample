@@ -1,5 +1,5 @@
 import React from 'react'
-import reactiveComponent from '../reactive-component';
+import {reactiveComponent} from 'soop';
 require('../styles/styles.css');
 
 

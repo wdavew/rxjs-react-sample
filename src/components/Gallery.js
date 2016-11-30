@@ -1,10 +1,7 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import reactiveComponent from '../reactive-component';
+import {reactiveComponent} from 'soop';
 import PointlessContainer from './PointlessContainer'
 import AnotherPointlessContainer from './AnotherPointlessContainer.js'
-import * as GalleryActions from '../actions/actions.js';
 import Perf from 'react-addons-perf'
 import Rx from 'rxjs/Rx';
 window.Perf = Perf;
