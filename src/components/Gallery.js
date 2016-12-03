@@ -121,7 +121,7 @@ class Gallery extends Component {
     )
   }
 
-  
+
 }
 
 export default reactiveComponent(Gallery, 'IMAGE_LIST', 'SELECT_IMAGE', 'GALAXY_HAS_ARRIVED');
