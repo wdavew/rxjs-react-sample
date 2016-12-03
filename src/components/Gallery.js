@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {reactiveComponent} from 'soup-js';
+import { reactiveComponent } from 'soup-js';
 import PointlessContainer from './PointlessContainer'
 import AnotherPointlessContainer from './AnotherPointlessContainer.js'
 import Perf from 'react-addons-perf'
@@ -9,7 +9,6 @@ require('../styles/styles.css');
 
 const API_KEY = 'a46a979f39c49975dbdd23b378e6d3d5';
 const API_ENDPOINT = `https://api.flickr.com/services/rest/?method=flickr.interestingness.getList&api_key=${API_KEY}&format=json&nojsoncallback=1&per_page=5`;
-
 
 const fetchImages = (upstream) => {
   // upstream.filter(action => action.type === 'REQUEST_ABORT').last(data => console.log("upstream filtered", data));
@@ -34,7 +33,7 @@ const fetchGalaxy = (upstream) => {
     (fetch('https://upload.wikimedia.org/wikipedia/commons/3/3d/Grzybowa.jpg', init)
     ).then(response => response.blob())
       .then(blob => URL.createObjectURL(blob))
-    )
+  )
     .flatMap((responseString) => {
       return Rx.Observable.of({ data: responseString, type: 'GALAXY_HAS_ARRIVED' }).delay(3000)
     })
@@ -53,10 +52,9 @@ const timeIncr = (dispatch, time) => {
 class Gallery extends Component {
   constructor(props) {
     super();
-    console.log('props are', props);
     this.fetchImages = fetchImages.bind(this);
     this.fetchGalaxy = () => props.dispatchSideEffect(fetchGalaxy);
-    this.cancelRequest = () => props.dispatch({data: null, type: 'REQUEST_ABORT'});
+    this.cancelRequest = () => props.dispatch({ data: null, type: 'REQUEST_ABORT' });
     this.selectImage = selectImage.bind(this, props.dispatch);
     this.timeIncr = timeIncr.bind(this, props.dispatch);
   }
@@ -118,10 +116,12 @@ class Gallery extends Component {
             : undefined
           }
         </div>
-        <img src={galaxy}/>
+        <img src={galaxy} />
       </div>
     )
   }
+
+  
 }
 
 export default reactiveComponent(Gallery, 'IMAGE_LIST', 'SELECT_IMAGE', 'GALAXY_HAS_ARRIVED');

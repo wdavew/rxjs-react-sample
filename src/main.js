@@ -2,20 +2,35 @@ import "babel-polyfill"
 
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { Router, Route, Link, browserHistory, IndexRoute } from 'react-router'
 import Gallery from './components/Gallery'
-import soop from 'soup-js';
+import soup from 'soup-js';
+
+import Home from './components/Home'
+import About from './components/About'
+import Contact from './components/Contact'
+
+
+
 require("./styles/styles.css")
 
-const store = soop.createUpstream();
-const Timeline = soop.Timeline;
-const StreamProvider = soop.StreamProvider;
+const store = soup.createSuperstream();
+
+const Timeline = soup.Timeline;
+const StreamProvider = soup.StreamProvider;
 
 ReactDOM.render(
   <div>
-    <StreamProvider upstream={store}>
-      <Gallery />
+    <StreamProvider superstream={store}>
+      <Router history={browserHistory}>
+        <Route path="/" component={Navbar}>
+          <Route path="home" component={Home} />
+          <Route path="about" component={About} />
+          <Route path="contact" component={Contact} />
+        </Route>
+      </Router>
     </StreamProvider>
-    <Timeline upstream={store} />
+    <Timeline superstream={store} />
   </div>,
   document.getElementById('root')
 );
