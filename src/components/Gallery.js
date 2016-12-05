@@ -87,7 +87,7 @@ class Gallery extends Component {
   }
 
   timer() {
-    return setInterval(() => this.timeIncr(this.time += 50), 50);
+    return setInterval(() => this.timeIncr(this.time += 5000), 50);
   }
 
   render() {

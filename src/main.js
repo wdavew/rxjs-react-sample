@@ -3,19 +3,17 @@ import "babel-polyfill"
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Gallery from './components/Gallery'
-import soop from 'soup-js';
+import { createSuperstream, Timeline, StreamProvider } from 'soup-js'
 require("./styles/styles.css")
 
-const store = soop.createUpstream();
-const Timeline = soop.Timeline;
-const StreamProvider = soop.StreamProvider;
+const store = createSuperstream();
 
 ReactDOM.render(
   <div>
-    <StreamProvider upstream={store}>
+    <StreamProvider superstream={store}>
       <Gallery />
     </StreamProvider>
-    <Timeline upstream={store} />
+    <Timeline superstream={store} />
   </div>,
   document.getElementById('root')
 );

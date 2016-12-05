@@ -5,11 +5,8 @@ module.exports = {
     loaders: [
       {
         test: /.jsx?$/,
-        loader: 'babel-loader',
+        loaders: ['react-hot', 'babel-loader?presets[]=es2015,presets[]=react'],
         exclude: /node_modules/,
-        query: {
-          presets: ['es2015', 'react', 'stage-2']
-        }
       },
       {
         test: /\.css$/,
@@ -17,4 +14,10 @@ module.exports = {
       }
     ]
   },
+  devServer: {
+    proxy: {
+       "/ListOfNumbers" : "http://localhost:3000",
+       "/ListOfLetters" : "http://localhost:3000" 
+    }
+  }
 };
