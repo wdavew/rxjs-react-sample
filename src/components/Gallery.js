@@ -91,14 +91,14 @@ class Gallery extends Component {
   }
 
   render() {
-    const {IMAGE_LIST: images, SELECT_IMAGE: selectedImage, GALAXY_HAS_ARRIVED: galaxy} = this.props;
+    console.log('props', this.props);
+    const {images, selectedImage, galaxy} = this.props;
     return (
       <div>
         <div className="image-gallery">
           <button onClick={this.fetchGalaxy}>Fetch a Galaxy!</button>
           <button onClick={this.cancelRequest}>I changed my mind and no longer want a Galaxy</button>
           <button onClick={() => this.performanceTest()}>Click Me</button>
-          <PointlessContainer />
           <div className="gallery-image">
             <div>
               <img src={selectedImage} />
@@ -124,4 +124,4 @@ class Gallery extends Component {
   }
 }
 
-export default reactiveComponent(Gallery, 'IMAGE_LIST', 'SELECT_IMAGE', 'GALAXY_HAS_ARRIVED');
+export default reactiveComponent(Gallery, 'imageState$');
