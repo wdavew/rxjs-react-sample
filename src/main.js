@@ -3,22 +3,22 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import Gallery from './components/Gallery'
 import { createSuperstream, Timeline, StreamProvider, createStatestream } from 'soup-js'
-import reducer from './reducer.js';
-import image$ from './actionStreams.js';
+import {imageReducer, timeReducer} from './reducer.js';
+import {image$, time$} from './actionStreams.js';
 require("./styles/styles.css")
 
 const superstream = createSuperstream();
-const imageState$ = superstream.createStatestream(reducer, image$);
-const streamCollection = { imageState$ };
+const imageState$ = superstream.createStatestream(imageReducer, image$);
+const timeState$ = superstream.createStatestream(timeReducer, time$);
+const streamCollection = { imageState$, timeState$ };
 
 superstream.createStore(streamCollection);
-imageState$.subscribe(x => console.log('state stream is', x));
 
 ReactDOM.render(
   <div>
     <StreamProvider superstream={superstream}>
       <Gallery />
-    </StreamProvider>
+      </StreamProvider>
     <Timeline superstream={superstream} />
   </div>,
   document.getElementById('root')

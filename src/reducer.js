@@ -1,5 +1,4 @@
-function reducer(state = {}, action) {
-  console.log('reducer received', action);
+function imageReducer(state = {}, action) {
   switch(action.type) {
     case 'SELECT_IMAGE':
       return Object.assign({}, state, {selectedImage: action.data});
@@ -9,4 +8,12 @@ function reducer(state = {}, action) {
   return state;
 };
 
-export default reducer;
+function timeReducer(state = {x: 0}, action) {
+  switch(action.type) {
+    case 'TIME_INCR':
+      return Object.assign({}, state, {x: (state.x + 50)})
+  }
+  return state;
+};
+
+export {imageReducer, timeReducer}

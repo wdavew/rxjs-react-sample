@@ -4,8 +4,7 @@ require('../styles/styles.css');
 
 
 function PointlessContainer(props) {
-  let {TIME_INCR: x} = props;
-  x *= 10;
+  let {x} = props;
   return (
     <div className="pointless-container">
       I am subscribed to the superstream.
@@ -14,5 +13,5 @@ function PointlessContainer(props) {
   )
 }
 
-export default reactiveComponent(PointlessContainer, 'TIME_INCR');
+export default reactiveComponent(PointlessContainer, 'timeState$');
 

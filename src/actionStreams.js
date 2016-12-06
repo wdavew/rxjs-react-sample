@@ -1,8 +1,9 @@
 import { createSuperstream, createStatestream } from 'soup-js';
-import reducer from './reducer.js';
 
-const image$ = (superstream) => {
-  return superstream.filterForActionTypes(['SELECT_IMAGE', 'IMAGE_LIST'])
+export const image$ = (superstream) => {
+  return superstream.filterForActionTypes(['SELECT_IMAGE', 'IMAGE_LIST', 'GALAXY_HAS_ARRIVED'])
 }
 
-export default image$;
+export const time$ = (superstream) => {
+  return superstream.filterForActionTypes(['TIME_INCR'])
+}
