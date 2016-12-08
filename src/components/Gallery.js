@@ -9,8 +9,8 @@ require('../styles/styles.css');
 import { selectImage, fetchImages, fetchGalaxy, timeIncr, cancelRequest } from '../action.js';
 
 class Gallery extends Component {
-  constructor(props) {
-    super();
+  constructor(props, context) {
+    super(props, context);
     this.time = 0;
     this.emptyComponents = [];
     for (let i = 0; i < 3; i++) {
@@ -19,7 +19,7 @@ class Gallery extends Component {
   }
 
   componentDidMount() {
-    this.props.dispatchSideEffect(fetchImages);
+    this.props.dispatchObservableFn(fetchImages);
   }
 
   performanceTest() {
@@ -39,7 +39,6 @@ class Gallery extends Component {
   }
 
   render() {
-    console.log('props', this.props);
     const {images, selectedImage, galaxy, dispatch} = this.props;
     return (
       <div>

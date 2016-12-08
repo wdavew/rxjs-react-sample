@@ -1,4 +1,5 @@
 function imageReducer(state = {}, action) {
+  console.log('image reducer received', action, state);
   switch(action.type) {
     case 'SELECT_IMAGE':
       return Object.assign({}, state, {selectedImage: action.data});
