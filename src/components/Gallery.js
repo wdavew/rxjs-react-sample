@@ -10,6 +10,7 @@ import { selectImage, fetchImages, fetchGalaxy, timeIncr, cancelRequest } from '
 
 class Gallery extends Component {
   constructor(props, context) {
+    console.log('props are', props);
     super(props, context);
     this.time = 0;
     this.emptyComponents = [];
